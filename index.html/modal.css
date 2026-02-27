@@ -227,16 +227,152 @@ section{padding:8rem 5%;position:relative;}
 /* ===== BOOKING ===== */
 .booking{background:var(--bg-secondary);transition:background .4s;}
 .booking-content{max-width:680px;margin:0 auto;}
-.booking-form{display:flex;flex-direction:column;gap:2.2rem;}
-.form-group{position:relative;}
-.form-group input,.form-group textarea{width:100%;padding:1.1rem 1.4rem;background:var(--bg-card);border:1.5px solid var(--border-color);color:var(--text-primary);font-family:'Montserrat',sans-serif;font-size:.95rem;border-radius:50px;transition:border-color .3s;outline:none;}
-.form-group textarea{border-radius:18px;resize:vertical;min-height:140px;}
-.form-group label{position:absolute;left:1.4rem;top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:.9rem;pointer-events:none;transition:all .35s;background:var(--bg-card);padding:0 .4rem;}
-.form-group textarea+label{top:1.2rem;transform:none;}
-.form-group input:focus,.form-group textarea:focus{border-color:var(--accent);}
-.form-group input:focus+label,.form-group input:not(:placeholder-shown)+label,.form-group textarea:focus+label,.form-group textarea:not(:placeholder-shown)+label{top:0;transform:translateY(-50%);font-size:.76rem;color:var(--accent);}
-.form-submit-btn{align-self:center;padding:.95rem 3rem;background:var(--accent);color:var(--bg-primary);border:1.5px solid var(--accent);cursor:pointer;font-family:'Montserrat',sans-serif;font-size:.85rem;letter-spacing:2px;border-radius:50px;transition:all .35s;}
-.form-submit-btn:hover{background:transparent;color:var(--accent);}
+/* ===== BOOKING FORM ===== */
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* Form Groups */
+.form-group {
+  position: relative;
+}
+
+/* Inputs, Textarea, Select */
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 1.2rem 1.4rem;
+  font-size: 0.95rem;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 50px;
+  outline: none;
+  transition: border-color 0.3s, padding 0.3s;
+  box-sizing: border-box;
+  appearance: none; /* for select arrow styling */
+}
+
+/* Textarea */
+.form-group textarea {
+  border-radius: 18px;
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* Labels */
+.form-group label {
+  position: absolute;
+  left: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition: all 0.35s ease;
+  background: var(--bg-card);
+  padding: 0 0.4rem;
+}
+
+/* Float labels on focus, filled, or select chosen */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group textarea:focus + label,
+.form-group textarea:not(:placeholder-shown) + label,
+.form-group select:focus + label,
+.form-group select:not([value=""]) + label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 0.76rem;
+  color: var(--accent);
+}
+
+/* Focus border */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+
+/* Error messages */
+.error-message {
+  font-size: 0.75rem;
+  color: #ff3b3b;
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* Submit Button */
+.form-submit-btn {
+  align-self: center;
+  padding: 0.95rem 3rem;
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: 1.5px solid var(--accent);
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.35s;
+}
+
+.form-submit-btn:hover {
+  background: transparent;
+  color: var(--accent);
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+.success-message {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #e6ffe6; /* light green background */
+  border: 1px solid #33cc33; /* green border */
+  border-radius: 20px;
+  text-align: center;
+  color: #2d7a2d;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: none; /* hidden by default */
+}
+
+.success-message h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.success-message p {
+  font-size: 1rem;
+}
+
+/* ===== SELECT ARROW STYLE ===== */
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%23888' d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 14px 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .booking-form {
+    padding: 0 1rem;
+  }
+  .form-submit-btn {
+    width: 100%;
+  }
+  .success-message {
+    padding: 1.5rem;
+  }
+}
 .contact-options{display:flex;gap:1.2rem;justify-content:center;margin-top:3rem;flex-wrap:wrap;}
 .contact-btn{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.6rem;border:1.5px solid var(--border-color);color:var(--text-primary);text-decoration:none;border-radius:50px;font-size:.88rem;transition:all .3s;}
 .contact-btn:hover{background:var(--accent);color:var(--bg-primary);border-color:var(--accent);}
