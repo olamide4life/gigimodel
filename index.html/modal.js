@@ -113,10 +113,22 @@ var savedScrollY   = 0;
 function toggleTheme(){
   var html = document.documentElement;
   var dark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', dark ? 'light' : 'dark');
-  document.getElementById('desktopLabel').textContent = dark ? 'Dark' : 'Light';
-  document.getElementById('mobileLabel').textContent  = dark ? 'Off'  : 'On';
+  var newTheme = dark ? 'light' : 'dark';
+
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+
+  document.getElementById('desktopLabel').textContent = newTheme === 'dark' ? 'Light' : 'Dark';
+  document.getElementById('mobileLabel').textContent  = newTheme === 'dark' ? 'On' : 'Off';
 }
+/* ====== SAVE THEME ===== */
+/* ===== LOAD SAVED THEME ===== */
+(function(){
+  var saved = localStorage.getItem('theme');
+  if(saved){
+    document.documentElement.setAttribute('data-theme', saved);
+  }
+})();
 
 /* ===== MENU ===== */
 function toggleMenu(){ document.getElementById('navLinks').classList.toggle('active'); }
@@ -162,9 +174,11 @@ function renderMedia(item){
   var img = document.createElement('img');
   img.src = item.src;
   img.alt = '';
+  img.loading = 'lazy';
   /* If file missing, skip silently */
   img.onerror = function(){ this.style.display='none'; };
   return img;
+  
 }
 
 /* ===== OPEN LIGHTBOX ===== */
@@ -173,13 +187,15 @@ function openLightbox(gallery, index){
   currentIndex   = index;
 
   /* iOS scroll lock */
-  savedScrollY = window.scrollY;
-  document.body.style.top = '-' + savedScrollY + 'px';
-  document.body.classList.add('lb-open');
+ savedScrollY = window.pageYOffset;
+document.body.style.position = 'fixed';
+document.body.style.top = '-' + savedScrollY + 'px';
+document.body.style.width = '100%';
 
   var content = document.getElementById('lightboxContent');
   content.innerHTML = '';
-  content.appendChild(renderMedia(galleries[gallery][index]));
+ if(!galleries[gallery] || galleries[gallery].length === 0) return;
+content.appendChild(renderMedia(galleries[gallery][index]));
   document.getElementById('lightboxCounter').textContent = (index + 1) + ' / ' + galleries[gallery].length;
   buildDots(gallery);
   document.getElementById('lightbox').classList.add('active');
@@ -194,9 +210,10 @@ function closeLightbox(){
     lightbox.classList.remove('active');
     content.style.animation = '';
     content.querySelectorAll('video').forEach(function(v){ v.pause(); });
-    document.body.classList.remove('lb-open');
-    document.body.style.top = '';
-    window.scrollTo(0, savedScrollY);
+   document.body.style.position = '';
+document.body.style.top = '';
+document.body.style.width = '';
+window.scrollTo(0, savedScrollY);
   }, 220);
 }
 
@@ -256,11 +273,42 @@ function toggleLike(btn, base){
 }
 
 /* ===== FORM ===== */
-function handleSubmit(e){
-  e.preventDefault();
-  alert('Thank you for your inquiry! I will get back to you soon.');
-  e.target.reset();
-}
+const form = document.getElementById('bookingForm');
+const successMessage = document.getElementById('successMessage');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault(); // prevent default form submit
+
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch('https://formspree.io/f/mnjbrqpz', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      // Hide form and show custom success UI
+      form.style.display = 'none';
+      successMessage.style.display = 'block';
+      form.reset();
+
+      // Optional: hide success message after 5 seconds and show form again
+      setTimeout(() => {
+        successMessage.style.display = 'none';
+        form.style.display = 'block';
+      }, 5000);
+    } else {
+      alert('Oops! Something went wrong. Please try again.');
+    }
+  } catch (error) {
+    alert('Oops! Something went wrong. Please try again.');
+    console.error(error);
+  }
+});
 
 /* ===== SMOOTH SCROLL ===== */
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
